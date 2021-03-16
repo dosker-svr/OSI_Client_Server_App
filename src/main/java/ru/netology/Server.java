@@ -10,6 +10,8 @@ public class Server {
     private static BufferedReader in;
     private static PrintWriter out;
 
+    private static Client client;
+
     public static void main(String[] args) {
         int port = 8080;
         try {
@@ -22,9 +24,23 @@ public class Server {
 
                 System.out.println("Принято новое подключение");
 
-                final String name = in.readLine();
+                out.println("Write your name: ");
 
-                out.println(String.format("Привет, %s. Номер твоего порта - %d", name, clientSocket.getPort()));
+                String nameClient = in.readLine();
+
+                out.println("Are you child? (yes/no)");
+
+                String stringAgeVerification = in.readLine();
+                boolean ageVerification;
+                if(stringAgeVerification.equals("yes")) {
+                    ageVerification = true;
+                    out.println(String.format("Welcome to the kids area, %s ! Let's play!", nameClient));
+                } else {
+                    ageVerification = false;
+                    out.println(String.format("Welcome to the adult zone, %s ! Have a good rest, or a good working day!", nameClient));
+                }
+
+                client = new Client(nameClient, ageVerification);
 
             } finally {
                 System.out.println("Закрываем потоки с сервера ...");
@@ -37,3 +53,12 @@ public class Server {
         }
     }
 }
+
+
+/*Вкратце сервер начинает слушать порт, и когда первый клиент подключится к этому порту,
+сервер ожидает от него строчку (25 строка) и затем отправляет ответ.
+А клиент открывает сокет(подключаясь этим сокетом к серверу) и после подключения сразу отправляет своё имя.
+Затем читает строку из ответа и выводит её на экран.
+
+PrintWriter объявляется с output stream от сокета - то бишь он пишет в сокет. А println пишет в консоль.
+*/

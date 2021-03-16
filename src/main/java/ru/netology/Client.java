@@ -4,12 +4,20 @@ import java.io.*;
 import java.net.*;
 
 public class Client {
+    private String name;
+    private boolean ageVerification;
+
+    public Client (String name, boolean ageVerification) {
+        this.name = name;
+        this.ageVerification = ageVerification;
+    }
+
     private static Socket clientSocket;
     private static PrintWriter out;
     private static BufferedReader in;
 
     public static void main(String[] args) {
-        String host = "localhost";
+        String host = "netology.homework";
         int port = 8080;
         try {
             try {
@@ -17,12 +25,20 @@ public class Client {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                System.out.println("Введите свое имя: ");
-                String messageForServer = (new BufferedReader(new InputStreamReader(System.in))).readLine();
-                out.println(messageForServer);
+                String fromServerRequestName = in.readLine();
+                System.out.println(fromServerRequestName);
 
-                String fromServerMessage = in.readLine();
-                System.out.println(fromServerMessage);
+                String transferName = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+                out.println(transferName);
+
+                String fromServerRequestAgeVerification = in.readLine();
+                System.out.println(fromServerRequestAgeVerification);
+
+                String transferAgeVerification = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+                out.println(transferAgeVerification);
+
+                String transferWelcomeMessage = in.readLine();
+                System.out.println(transferWelcomeMessage);
 
             } finally {
                 System.out.println("Закрываем потоки от клиента ...");
