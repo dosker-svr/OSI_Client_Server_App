@@ -13,7 +13,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        String host = "localhost";
+        String host = "netology.homework";
         int port = 8080;
         try (Socket clientSocket = new Socket(host, port);
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
