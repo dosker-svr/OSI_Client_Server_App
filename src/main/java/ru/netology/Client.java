@@ -7,45 +7,34 @@ public class Client {
     private String name;
     private boolean ageVerification;
 
-    public Client (String name, boolean ageVerification) {
+    public Client(String name, boolean ageVerification) {
         this.name = name;
         this.ageVerification = ageVerification;
     }
 
-    private static Socket clientSocket;
-    private static PrintWriter out;
-    private static BufferedReader in;
-
     public static void main(String[] args) {
-        String host = "netology.homework";
+        String host = "localhost";
         int port = 8080;
-        try {
-            try {
-                clientSocket = new Socket(host, port);
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        try (Socket clientSocket = new Socket(host, port);
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
-                String fromServerRequestName = in.readLine();
-                System.out.println(fromServerRequestName);
 
-                String transferName = (new BufferedReader(new InputStreamReader(System.in))).readLine();
-                out.println(transferName);
+            String fromServerRequestName = in.readLine();
+            System.out.println(fromServerRequestName);
 
-                String fromServerRequestAgeVerification = in.readLine();
-                System.out.println(fromServerRequestAgeVerification);
+            String transferName = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+            out.println(transferName);
 
-                String transferAgeVerification = (new BufferedReader(new InputStreamReader(System.in))).readLine();
-                out.println(transferAgeVerification);
+            String fromServerRequestAgeVerification = in.readLine();
+            System.out.println(fromServerRequestAgeVerification);
 
-                String transferWelcomeMessage = in.readLine();
-                System.out.println(transferWelcomeMessage);
+            String transferAgeVerification = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+            out.println(transferAgeVerification);
 
-            } finally {
-                System.out.println("Закрываем потоки от клиента ...");
-                clientSocket.close();
-                out.close();
-                in.close();
-            }
+            String transferWelcomeMessage = in.readLine();
+            System.out.println(transferWelcomeMessage);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -5,49 +5,36 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    private static ServerSocket serverSocket;
-    private static Socket clientSocket;
-    private static BufferedReader in;
-    private static PrintWriter out;
 
     private static Client client;
 
     public static void main(String[] args) {
         int port = 8080;
-        try {
-            try {
-                serverSocket = new ServerSocket(port);
-                clientSocket = serverSocket.accept();
+        try (ServerSocket serverSocket = new ServerSocket(port);
+             Socket clientSocket = serverSocket.accept();
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
+            System.out.println("Принято новое подключение");
 
-                System.out.println("Принято новое подключение");
+            out.println("Write your name: ");
 
-                out.println("Write your name: ");
+            String nameClient = in.readLine();
 
-                String nameClient = in.readLine();
+            out.println("Are you child? (yes/no)");
 
-                out.println("Are you child? (yes/no)");
-
-                String stringAgeVerification = in.readLine();
-                boolean ageVerification;
-                if(stringAgeVerification.equals("yes")) {
-                    ageVerification = true;
-                    out.println(String.format("Welcome to the kids area, %s ! Let's play!", nameClient));
-                } else {
-                    ageVerification = false;
-                    out.println(String.format("Welcome to the adult zone, %s ! Have a good rest, or a good working day!", nameClient));
-                }
-
-                client = new Client(nameClient, ageVerification);
-
-            } finally {
-                System.out.println("Закрываем потоки с сервера ...");
-                clientSocket.close();
-                in.close();
-                out.close();
+            String stringAgeVerification = in.readLine();
+            boolean ageVerification;
+            if (stringAgeVerification.equals("yes")) {
+                ageVerification = true;
+                out.println(String.format("Welcome to the kids area, %s ! Let's play!", nameClient));
+            } else {
+                ageVerification = false;
+                out.println(String.format("Welcome to the adult zone, %s ! Have a good rest, or a good working day!", nameClient));
             }
+
+            client = new Client(nameClient, ageVerification);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
